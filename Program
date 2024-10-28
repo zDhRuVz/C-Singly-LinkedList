@@ -1,0 +1,175 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+//declaring linked list
+
+typedef struct node{
+	int data;
+	struct node*next;
+}node;
+node *head = NULL; 
+
+//declaring all the functions.
+
+void node_create();
+void node_add(int loc);
+void node_delete(int loc);
+void node_display();
+int count_node();
+
+//main func
+
+int main() {
+    int ch, choice = 1, loc;
+    
+    while (choice == 1) {
+        printf("\n1. Create\n2. Add node\n3. Delete node\n4. Display\n");
+        printf("Enter your choice: ");
+        scanf("%d", &ch);  
+        
+        switch (ch) {
+            case 1:
+                node_create();
+                break;
+            case 2:
+                printf("Enter location of new node: ");
+                scanf("%d", &loc); 
+                node_add(loc);
+                break;
+            case 3:
+                printf("Enter which node you want to delete: ");
+                scanf("%d", &loc); 
+                node_delete(loc);
+                break;
+            case 4:
+                node_display();
+                break;
+            default:
+                printf("Enter a valid choice.\n");
+                break;
+        }
+        
+        printf("Do you want to do more? Press 1 to continue, any other key to exit: ");
+        scanf("%d", &choice);  
+    }
+    return 0; 
+}
+
+//function for creating a LL
+
+void node_create() {
+    node *A, *B;
+    int n, i;
+    
+    head = (node*)malloc(sizeof(node));
+    head->next = NULL;
+    
+    printf("Enter value of head node: ");
+    scanf("%d", &head->data);
+    
+    A = head;
+    
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+    
+    for (i = 0; i < n; i++) {
+        B = (node*)malloc(sizeof(node));
+        printf("Enter value of new node: ");
+        scanf("%d", &B->data);
+        
+        A->next = B;
+        B->next = NULL;
+        A = B;  
+    }
+}
+
+//func for adding a node
+
+void node_add(int loc) {
+	node *newNode,*currentNode;
+	int t_node=count_node();
+    if(loc==1){
+    	newNode=(node*)malloc(sizeof(node));
+    	printf("Enter value of new node: ");
+    	scanf("%d",&newNode->data);
+    	newNode->next=head;
+    	head=newNode;
+	}
+	else if(loc>1 && loc<=t_node){
+		newNode=(node*)malloc(sizeof(node));
+		printf("Enter value of new node: ");	
+		scanf("%d",&newNode->data);
+		currentNode=head;
+		for(int i=0;i<loc-2;i++){
+			currentNode=currentNode->next;
+		}
+		newNode->next=currentNode->next;
+		currentNode->next=newNode;
+	}
+	else{
+		printf("Enter a valid node.\n");
+	}
+}
+
+//func for deleting a node
+
+void node_delete(int loc) {
+    node *delNode,*currentNode,*A=NULL;
+    int t_node=count_node();
+    if(loc==1){
+    	delNode=head;
+    	head=delNode->next;
+    	free(delNode);
+	}
+	else if(loc>1 && loc<=t_node){
+		currentNode=head;
+		for(int i=0;i<loc-2;i++){
+			currentNode=currentNode->next;
+		}
+		delNode=currentNode->next;
+		if(delNode->next!=NULL){
+			A=delNode->next;
+			currentNode->next=A;
+			printf("%d is deleted\n",delNode->data);
+			free(delNode);
+		}
+		else{
+			currentNode->next=A;
+			printf("%d is deleted\n",delNode->data);
+			free(delNode);
+		}
+	}
+	else{
+		printf("Enter a valid node.\n");
+	}
+}
+
+//func for displaying a LL
+
+void node_display() {
+    node *temp = head;
+    
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+    
+    printf("Singly Linked List: ");
+    while (temp != NULL) {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+//func for counting total no of nodes
+
+int count_node(){
+	node * temp=head;
+	int count=0;
+	while(temp!=NULL){
+		count++;
+		temp=temp->next;
+	}
+	return count;
+}
